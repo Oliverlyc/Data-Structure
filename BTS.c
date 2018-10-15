@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
-#define NoInfo 0;
+#include <Queue.h>
+#define NoInfo 0
 typedef struct TNode *Position;
 typedef struct SNode *PtrToSNode;
 typedef Position BinTree;
@@ -11,8 +12,8 @@ typedef int StackPosition;
 typedef enum { true=1, false} bool;
 struct TNode{
     ElementType Data;
-    BinTree Left; //å·¦å­æ ‘
-    BinTree Right;  //å³å­æ ‘
+    BinTree Left; //×ó×ÓÊ÷
+    BinTree Right;  //ÓÒ×ÓÊ÷
 };
 struct SNode{
     ElementType *Data;
@@ -20,9 +21,9 @@ struct SNode{
     int MaxSize;
 };
 bool isEmpty(BinTree BT);
-void PerOrderTraversal(BinTree BT); //å…ˆåºéåŽ†
-void InOrderTraversal(BinTree BT); //ä¸­åºéåŽ†
-void PostOrderTraversal(BinTree BT); //ä¸­åºéåŽ†
+void PerOrderTraversal(BinTree BT); //ÏÈÐò±éÀú
+void InOrderTraversal(BinTree BT); //ÖÐÐò±éÀú
+void PostOrderTraversal(BinTree BT); //ÖÐÐò±éÀú
 Stack CreateStack(int MaxSize)
 {
     Stack S = (Stack)malloc(sizeof(struct SNode));
@@ -42,7 +43,7 @@ bool StackIsFull(Stack S)
 bool Push(Stack S, ElementType X)
 {
     if (StackIsFull(S)){
-        printf("å †æ ˆæ»¡");
+        printf("¶ÑÕ»Âú");
         return false;
     }else{
         S->Data[++(S->Top)] = X;
@@ -52,16 +53,16 @@ bool Push(Stack S, ElementType X)
 ElementType Pop(Stack S)
 {
     if(StackIsFull(S)){
-        printf("å †æ ˆç©º");
+        printf("¶ÑÕ»¿Õ");
         return false;
     }else{
         return (S->Data[(S->Top)--]);
     }
 }
-/* å…ˆåºéåŽ†
- * è®¿é—®æ ¹èŠ‚ç‚¹
- * å…ˆåºéåŽ†å·¦å­æ ‘
- * å…ˆåºéåŽ†å³å­æ ‘
+/* ÏÈÐò±éÀú
+ * ·ÃÎÊ¸ù½Úµã
+ * ÏÈÐò±éÀú×ó×ÓÊ÷
+ * ÏÈÐò±éÀúÓÒ×ÓÊ÷
  * */
 void PerOrderTraversal(BinTree BT)
 {
@@ -71,10 +72,10 @@ void PerOrderTraversal(BinTree BT)
         PerOrderTraversal(BT->Right);
     }
 }
-/*ä¸­åºéåŽ†
- * ä¸­åºéåŽ†å·¦å­æ ‘
- * è®¿é—®æ ¹èŠ‚ç‚¹
- * ä¸­åºéåŽ†å³å­æ ‘
+/*ÖÐÐò±éÀú
+ * ÖÐÐò±éÀú×ó×ÓÊ÷
+ * ·ÃÎÊ¸ù½Úµã
+ * ÖÐÐò±éÀúÓÒ×ÓÊ÷
  * */
 void InOrderTraval(BinTree BT)
 {
@@ -84,10 +85,10 @@ void InOrderTraval(BinTree BT)
         PerOrderTraversal(BT->Right);
     }
 }
-/*åŽåºéåŽ†
- * åŽåºéåŽ†å·¦å­æ ‘
- * åŽåºéåŽ†å³å­æ ‘
- * è®¿é—®æ ¹èŠ‚ç‚¹
+/*ºóÐò±éÀú
+ * ºóÐò±éÀú×ó×ÓÊ÷
+ * ºóÐò±éÀúÓÒ×ÓÊ÷
+ * ·ÃÎÊ¸ù½Úµã
  * */
 void PostOrderTraval(BinTree BT)
 {
@@ -97,7 +98,7 @@ void PostOrderTraval(BinTree BT)
         printf("%d", BT->Data);
     }
 }
-/*ä¸­åºéåŽ†éžé€’å½’éåŽ†ç®—æ³•
+/*ÖÐÐò±éÀú·ÇµÝ¹é±éÀúËã·¨
  *
  * */
 void InOrderTravalWithStack(BinTree BT)
@@ -120,29 +121,36 @@ int PostOrderGetHeight(BinTree BT)
 {
     int HL, HR, MaxH;
     if(BT){
-        HL = PostOrderGetHeight(BT->Left); //å·¦å­æ ‘æ·±åº¦
-        HR = PostOrderGetHeight(BT->Right); //å³å­æ ‘æ·±åº¦
-        MaxH = (HL>HR)?HL:HR; //å–è¾ƒå¤§çš„æ·±åº¦
-        return (MaxH + 1); //è¿”å›žæ ‘çš„æ·±åº¦
+        HL = PostOrderGetHeight(BT->Left); //×ó×ÓÊ÷Éî¶È
+        HR = PostOrderGetHeight(BT->Right); //ÓÒ×ÓÊ÷Éî¶È
+        MaxH = (HL>HR)?HL:HR; //È¡½Ï´óµÄÉî¶È
+        return (MaxH + 1); //·µ»ØÊ÷µÄÉî¶È
     }
-    else return 0; //ç©ºæ ‘æ·±åº¦ä¸º0
+    else return 0; //¿ÕÊ÷Éî¶ÈÎª0
 }
 BinTree LevelCreateTree()
 {
     ElementType Data;
     BinTree BT, T;
-    Queue Q = CreateQueue();
+    Queue Q = CreateQueue(100);
 
     scanf("%d", &Data);
+    //½¨Á¢¸ù½Úµã
     if (Data != NoInfo){
-        //åˆ†é…æ ¹èŠ‚ç‚¹å•å…ƒï¼Œæ ¹èŠ‚ç‚¹å…¥é˜Ÿ
+        //·ÖÅä¸ù½Úµãµ¥Ôª£¬¸ù½ÚµãÈë¶Ó
         BT = (BinTree)malloc(sizeof(struct TNode));
         BT->Data = Data;
         BT->Left = BT->Right = NULL;
         AddQ(Q, BT);
+    }else{
+        return NULL;
     }
-    //å»ºç«‹æ ¹èŠ‚ç‚¹
 
+    
+    while(!QueueIsEmpty(Q)){
+        /* code */
+    }
+    
 }
 int main() {
     printf("Hello, World!\n");
